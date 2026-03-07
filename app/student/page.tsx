@@ -1,34 +1,37 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Radio, Check, Clock, Zap, GraduationCap } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
+import { Check, Send, Sparkles, Clock, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-type Step = "waiting" | "answer" | "reasoning" | "submitted"
+type Step = "answer" | "reasoning" | "submitted"
 
 const answerOptions = [
-  { id: "A", text: "Oxygen" },
-  { id: "B", text: "Glucose" },
-  { id: "C", text: "Carbon dioxide" },
-  { id: "D", text: "Water" },
+  { id: "A", text: "Because gravity pulls them equally", color: "from-indigo-500 to-violet-500", bg: "bg-indigo-50", border: "border-indigo-200", activeBg: "bg-indigo-100" },
+  { id: "B", text: "Because heavier objects have more force", color: "from-sky-500 to-cyan-500", bg: "bg-sky-50", border: "border-sky-200", activeBg: "bg-sky-100" },
+  { id: "C", text: "Because air resistance balances the weight", color: "from-emerald-500 to-teal-500", bg: "bg-emerald-50", border: "border-emerald-200", activeBg: "bg-emerald-100" },
+  { id: "D", text: "Because heavier objects fall faster", color: "from-amber-500 to-orange-500", bg: "bg-amber-50", border: "border-amber-200", activeBg: "bg-amber-100" },
 ]
 
-export default function StudentSessionPage() {
+export default function StudentLiveSessionPage() {
   const [step, setStep] = useState<Step>("answer")
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null)
   const [reasoning, setReasoning] = useState("")
-  const [timeLeft, setTimeLeft] = useState(45)
+  const [timeLeft, setTimeLeft] = useState(60)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
     if (step === "answer" && timeLeft > 0) {
       const timer = setInterval(() => {
-        setTimeLeft((prev) => prev - 1)
+        setTimeLeft((prev) => Math.max(0, prev - 1))
       }, 1000)
       return () => clearInterval(timer)
     }
   }, [step, timeLeft])
+
+  const handleAnswerSelect = (id: string) => {
+    setSelectedAnswer(id)
+  }
 
   const handleAnswerSubmit = () => {
     if (selectedAnswer) {
@@ -36,27 +39,38 @@ export default function StudentSessionPage() {
     }
   }
 
-  const handleReasoningSubmit = () => {
+  const handleReasoningSubmit = async () => {
     if (reasoning.trim()) {
+      setIsSubmitting(true)
+      await new Promise(resolve => setTimeout(resolve, 800))
+      setIsSubmitting(false)
       setStep("submitted")
     }
   }
 
+  const selectedOption = answerOptions.find(o => o.id === selectedAnswer)
+
   return (
-    <div className="flex min-h-[100dvh] flex-col bg-gradient-to-b from-slate-50 to-slate-100">
+    <div className="flex min-h-[100dvh] flex-col bg-gradient-to-br from-indigo-50 via-white to-violet-50">
       {/* Header */}
-      <header className="bg-[#1e3a5f] px-4 py-3 text-white shadow-lg sm:py-4">
+      <header className="sticky top-0 z-50 bg-gradient-to-r from-indigo-600 to-violet-600 px-4 py-3 text-white shadow-lg">
         <div className="mx-auto flex max-w-lg items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 backdrop-blur-sm sm:h-9 sm:w-9">
-              <GraduationCap className="h-4 w-4 sm:h-5 sm:w-5" />
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
+              <Sparkles className="h-5 w-5" />
             </div>
-            <span className="text-base font-bold tracking-tight sm:text-lg">ClassSense</span>
+            <div>
+              <h1 className="text-lg font-bold tracking-tight">ClassSense</h1>
+              <p className="text-xs text-white/70">Live Session</p>
+            </div>
           </div>
+          
           {step === "answer" && (
             <div className={cn(
-              "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium",
-              timeLeft <= 10 ? "bg-red-500/20 text-red-200" : "bg-white/10"
+              "flex items-center gap-2 rounded-full px-4 py-2 font-mono text-lg font-bold transition-all",
+              timeLeft <= 10 
+                ? "animate-pulse bg-red-500/30 text-red-100" 
+                : "bg-white/15 backdrop-blur-sm"
             )}>
               <Clock className="h-4 w-4" />
               <span>{timeLeft}s</span>
@@ -65,157 +79,249 @@ export default function StudentSessionPage() {
         </div>
       </header>
 
-      {/* Progress Steps */}
-      <div className="border-b border-slate-200 bg-white px-4 py-3 shadow-sm">
-        <div className="mx-auto flex max-w-lg items-center justify-center gap-3">
+      {/* Progress Indicator */}
+      <div className="bg-white/80 backdrop-blur-sm border-b border-indigo-100 px-4 py-3">
+        <div className="mx-auto flex max-w-lg items-center justify-center gap-4">
           <div className="flex items-center gap-2">
             <div className={cn(
-              "flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold transition-all duration-300",
-              step === "answer" ? "bg-[#1e3a5f] text-white ring-4 ring-blue-100" : "bg-emerald-500 text-white"
+              "flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold transition-all duration-500",
+              step === "answer" 
+                ? "bg-gradient-to-br from-indigo-500 to-violet-500 text-white shadow-lg shadow-indigo-200 scale-110" 
+                : "bg-emerald-500 text-white"
             )}>
-              {step === "answer" ? "1" : <Check className="h-3.5 w-3.5" />}
+              {step === "answer" ? "1" : <Check className="h-4 w-4" />}
             </div>
-            <span className="hidden text-sm font-medium text-slate-700 sm:block">Answer</span>
+            <span className="text-sm font-semibold text-slate-700">Answer</span>
           </div>
+          
           <div className={cn(
-            "h-0.5 w-8 rounded-full transition-all duration-300 sm:w-12",
-            step !== "answer" ? "bg-emerald-500" : "bg-slate-200"
+            "h-1 w-16 rounded-full transition-all duration-500",
+            step !== "answer" ? "bg-emerald-400" : "bg-slate-200"
           )} />
+          
           <div className="flex items-center gap-2">
             <div className={cn(
-              "flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold transition-all duration-300",
-              step === "reasoning" ? "bg-[#1e3a5f] text-white ring-4 ring-blue-100" : 
-              step === "submitted" ? "bg-emerald-500 text-white" : "bg-slate-200 text-slate-500"
+              "flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold transition-all duration-500",
+              step === "reasoning" 
+                ? "bg-gradient-to-br from-indigo-500 to-violet-500 text-white shadow-lg shadow-indigo-200 scale-110" 
+                : step === "submitted" 
+                  ? "bg-emerald-500 text-white" 
+                  : "bg-slate-200 text-slate-400"
             )}>
-              {step === "submitted" ? <Check className="h-3.5 w-3.5" /> : "2"}
+              {step === "submitted" ? <Check className="h-4 w-4" /> : "2"}
             </div>
-            <span className="hidden text-sm font-medium text-slate-700 sm:block">Explain</span>
+            <span className={cn(
+              "text-sm font-semibold transition-colors",
+              step !== "answer" ? "text-slate-700" : "text-slate-400"
+            )}>Explain</span>
           </div>
         </div>
       </div>
 
       {/* Main Content */}
-      <main className="flex flex-1 flex-col items-center justify-center p-4 sm:p-6">
-        <div className="w-full max-w-md">
+      <main className="flex flex-1 flex-col p-4 sm:p-6">
+        <div className="mx-auto w-full max-w-lg flex-1 flex flex-col">
+          
           {/* STEP 1: Answer Selection */}
           {step === "answer" && (
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 rounded-2xl bg-white p-5 shadow-xl ring-1 ring-slate-200/50 sm:p-6">
-              <div className="mb-5 text-center sm:mb-6">
-                <div className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-[#1e3a5f]">
-                  <Zap className="h-3 w-3" />
-                  Question 5 of 12
+            <div className="flex flex-1 flex-col animate-in fade-in slide-in-from-bottom-4 duration-500">
+              {/* Question Card */}
+              <div className="mb-6 rounded-3xl bg-white p-6 shadow-xl shadow-indigo-100/50 ring-1 ring-indigo-100">
+                <div className="mb-4 flex items-center justify-center">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-indigo-100 to-violet-100 px-4 py-1.5 text-sm font-semibold text-indigo-700">
+                    <span className="flex h-2 w-2 rounded-full bg-indigo-500 animate-pulse" />
+                    Question 5 of 12
+                  </span>
                 </div>
-                <p className="text-balance text-lg font-semibold leading-snug text-slate-900 sm:text-xl">
-                  What is the main product of photosynthesis?
-                </p>
+                <h2 className="text-center text-xl font-bold leading-relaxed text-slate-800 sm:text-2xl">
+                  Why do heavier and lighter objects fall at the same speed?
+                </h2>
               </div>
 
-              <div className="space-y-2.5 sm:space-y-3">
-                {answerOptions.map((option) => (
+              {/* Answer Options */}
+              <div className="flex-1 space-y-3">
+                {answerOptions.map((option, index) => (
                   <button
                     key={option.id}
-                    onClick={() => setSelectedAnswer(option.id)}
+                    onClick={() => handleAnswerSelect(option.id)}
+                    style={{ animationDelay: `${index * 100}ms` }}
                     className={cn(
-                      "flex w-full items-center gap-3 rounded-xl border-2 p-3.5 text-left transition-all duration-200 sm:gap-4 sm:p-4",
+                      "animate-in fade-in slide-in-from-bottom-2 w-full rounded-2xl border-2 p-4 text-left transition-all duration-300 active:scale-[0.98]",
                       selectedAnswer === option.id
-                        ? "border-[#1e3a5f] bg-blue-50 shadow-md"
-                        : "border-slate-200 hover:border-slate-300 hover:bg-slate-50 active:scale-[0.98]"
+                        ? `${option.activeBg} ${option.border} shadow-lg scale-[1.02]`
+                        : `bg-white ${option.border} hover:shadow-md hover:scale-[1.01]`
                     )}
                   >
-                    <span className={cn(
-                      "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-sm font-bold transition-all duration-200 sm:h-10 sm:w-10",
-                      selectedAnswer === option.id
-                        ? "bg-[#1e3a5f] text-white shadow-md"
-                        : "bg-slate-100 text-slate-600"
-                    )}>
-                      {option.id}
-                    </span>
-                    <span className={cn(
-                      "flex-1 font-medium transition-colors",
-                      selectedAnswer === option.id ? "text-[#1e3a5f]" : "text-slate-700"
-                    )}>
-                      {option.text}
-                    </span>
-                    {selectedAnswer === option.id && (
-                      <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#1e3a5f]">
-                        <Check className="h-3.5 w-3.5 text-white" />
+                    <div className="flex items-center gap-4">
+                      <div className={cn(
+                        "flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-lg font-bold transition-all duration-300",
+                        selectedAnswer === option.id
+                          ? `bg-gradient-to-br ${option.color} text-white shadow-lg`
+                          : `${option.bg} text-slate-600`
+                      )}>
+                        {option.id}
                       </div>
-                    )}
+                      <span className={cn(
+                        "flex-1 text-base font-medium leading-snug transition-colors sm:text-lg",
+                        selectedAnswer === option.id ? "text-slate-900" : "text-slate-700"
+                      )}>
+                        {option.text}
+                      </span>
+                      {selectedAnswer === option.id && (
+                        <div className={cn(
+                          "flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br",
+                          option.color
+                        )}>
+                          <Check className="h-4 w-4 text-white" />
+                        </div>
+                      )}
+                    </div>
                   </button>
                 ))}
               </div>
 
-              <Button
+              {/* Submit Button */}
+              <button
                 onClick={handleAnswerSubmit}
                 disabled={!selectedAnswer}
-                className="mt-5 w-full rounded-xl bg-[#1e3a5f] py-5 text-base font-semibold shadow-lg transition-all hover:bg-[#16324d] hover:shadow-xl disabled:opacity-50 sm:mt-6 sm:py-6"
+                className={cn(
+                  "mt-6 w-full rounded-2xl py-5 text-lg font-bold text-white shadow-xl transition-all duration-300",
+                  selectedAnswer
+                    ? "bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 hover:shadow-2xl hover:shadow-indigo-200 active:scale-[0.98]"
+                    : "bg-slate-300 cursor-not-allowed"
+                )}
               >
                 Submit Answer
-              </Button>
+              </button>
             </div>
           )}
 
           {/* STEP 2: Explain Reasoning */}
           {step === "reasoning" && (
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 rounded-2xl bg-white p-5 shadow-xl ring-1 ring-slate-200/50 sm:p-6">
-              <div className="mb-2 flex justify-center">
-                <span className={cn(
-                  "inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium",
-                  selectedAnswer === "B" ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-700"
+            <div className="flex flex-1 flex-col animate-in fade-in slide-in-from-right-4 duration-500">
+              {/* Selected Answer Badge */}
+              <div className="mb-4 flex justify-center">
+                <div className={cn(
+                  "inline-flex items-center gap-3 rounded-full px-5 py-2.5 shadow-lg",
+                  selectedOption?.activeBg,
+                  selectedOption?.border
                 )}>
-                  <Check className="h-3.5 w-3.5" />
-                  {answerOptions.find(o => o.id === selectedAnswer)?.text}
-                </span>
-              </div>
-              
-              <div className="mb-5 mt-4 text-center sm:mb-6">
-                <p className="text-balance text-lg font-semibold text-slate-900 sm:text-xl">
-                  Why did you choose this answer?
-                </p>
-                <p className="mt-1.5 text-sm text-slate-500">
-                  Explain your reasoning in a few sentences
-                </p>
+                  <div className={cn(
+                    "flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br text-sm font-bold text-white",
+                    selectedOption?.color
+                  )}>
+                    {selectedAnswer}
+                  </div>
+                  <span className="font-semibold text-slate-700">{selectedOption?.text}</span>
+                  <Check className="h-5 w-5 text-emerald-500" />
+                </div>
               </div>
 
-              <Textarea
-                placeholder="Write a short explanation of your thinking..."
-                value={reasoning}
-                onChange={(e) => setReasoning(e.target.value)}
-                className="min-h-[120px] resize-none rounded-xl border-slate-200 text-base transition-all focus:border-[#1e3a5f] focus:ring-2 focus:ring-blue-100 sm:min-h-[140px]"
-              />
+              {/* Reasoning Card */}
+              <div className="flex-1 rounded-3xl bg-white p-6 shadow-xl shadow-violet-100/50 ring-1 ring-violet-100">
+                <div className="mb-6 text-center">
+                  <div className="mb-3 inline-flex items-center justify-center rounded-full bg-gradient-to-r from-violet-100 to-purple-100 p-3">
+                    <Sparkles className="h-6 w-6 text-violet-600" />
+                  </div>
+                  <h2 className="text-xl font-bold text-slate-800 sm:text-2xl">
+                    Explain your reasoning
+                  </h2>
+                  <p className="mt-2 text-slate-500">
+                    Why did you choose this answer?
+                  </p>
+                </div>
 
-              <Button
+                <div className="relative">
+                  <textarea
+                    placeholder="Write your explanation..."
+                    value={reasoning}
+                    onChange={(e) => setReasoning(e.target.value)}
+                    rows={5}
+                    className="w-full resize-none rounded-2xl border-2 border-violet-200 bg-violet-50/50 p-4 text-base text-slate-800 placeholder-slate-400 transition-all focus:border-violet-400 focus:bg-white focus:outline-none focus:ring-4 focus:ring-violet-100"
+                  />
+                  <div className="absolute bottom-3 right-3 text-xs text-slate-400">
+                    {reasoning.length} characters
+                  </div>
+                </div>
+              </div>
+
+              {/* Submit Button */}
+              <button
                 onClick={handleReasoningSubmit}
-                disabled={!reasoning.trim()}
-                className="mt-4 w-full rounded-xl bg-[#1e3a5f] py-5 text-base font-semibold shadow-lg transition-all hover:bg-[#16324d] hover:shadow-xl disabled:opacity-50 sm:py-6"
+                disabled={!reasoning.trim() || isSubmitting}
+                className={cn(
+                  "mt-6 flex w-full items-center justify-center gap-3 rounded-2xl py-5 text-lg font-bold text-white shadow-xl transition-all duration-300",
+                  reasoning.trim() && !isSubmitting
+                    ? "bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 hover:shadow-2xl hover:shadow-violet-200 active:scale-[0.98]"
+                    : "bg-slate-300 cursor-not-allowed"
+                )}
               >
-                Submit Explanation
-              </Button>
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    Submitting...
+                  </>
+                ) : (
+                  <>
+                    <Send className="h-5 w-5" />
+                    Submit Reasoning
+                  </>
+                )}
+              </button>
             </div>
           )}
 
           {/* SUBMITTED STATE */}
           {step === "submitted" && (
-            <div className="animate-in fade-in zoom-in-95 duration-500 rounded-2xl bg-white p-6 text-center shadow-xl ring-1 ring-slate-200/50 sm:p-8">
-              <div className="mb-4 flex justify-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 ring-8 ring-emerald-50 sm:h-20 sm:w-20">
-                  <Check className="h-8 w-8 text-emerald-600 sm:h-10 sm:w-10" />
+            <div className="flex flex-1 flex-col items-center justify-center animate-in fade-in zoom-in-95 duration-700">
+              {/* Success Animation */}
+              <div className="relative mb-8">
+                <div className="absolute inset-0 animate-ping rounded-full bg-emerald-400/30" />
+                <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 shadow-2xl shadow-emerald-200">
+                  <Check className="h-12 w-12 text-white" strokeWidth={3} />
                 </div>
               </div>
-              <h2 className="text-xl font-bold text-slate-900 sm:text-2xl">Response Submitted!</h2>
-              <p className="mt-2 text-slate-500">
-                Waiting for next question...
+
+              <h2 className="mb-2 text-2xl font-bold text-slate-800 sm:text-3xl">
+                Answer Submitted!
+              </h2>
+              <p className="mb-8 text-lg text-slate-500">
+                Waiting for teacher...
               </p>
-              <div className="mt-6 rounded-xl bg-slate-50 p-4 text-left">
-                <p className="text-xs font-medium uppercase tracking-wider text-slate-400">Your answer</p>
-                <p className="mt-1 font-semibold text-slate-900">
-                  {answerOptions.find(o => o.id === selectedAnswer)?.text}
-                </p>
-                <p className="mt-4 text-xs font-medium uppercase tracking-wider text-slate-400">Your reasoning</p>
-                <p className="mt-1 text-sm leading-relaxed text-slate-700">{reasoning}</p>
+
+              {/* Summary Card */}
+              <div className="w-full rounded-3xl bg-white p-6 shadow-xl shadow-emerald-100/50 ring-1 ring-emerald-100">
+                <div className="space-y-4">
+                  <div className="rounded-2xl bg-gradient-to-r from-indigo-50 to-violet-50 p-4">
+                    <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-indigo-600">
+                      Your Answer
+                    </p>
+                    <div className="flex items-center gap-3">
+                      <div className={cn(
+                        "flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br text-sm font-bold text-white",
+                        selectedOption?.color
+                      )}>
+                        {selectedAnswer}
+                      </div>
+                      <span className="font-semibold text-slate-800">{selectedOption?.text}</span>
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl bg-gradient-to-r from-violet-50 to-purple-50 p-4">
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-violet-600">
+                      Your Reasoning
+                    </p>
+                    <p className="leading-relaxed text-slate-700">{reasoning}</p>
+                  </div>
+                </div>
               </div>
-              <div className="mt-6 flex items-center justify-center gap-2 text-sm text-slate-500">
-                <div className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
+
+              {/* Connection Status */}
+              <div className="mt-8 flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-sm font-medium text-emerald-700">
+                <span className="relative flex h-3 w-3">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex h-3 w-3 rounded-full bg-emerald-500" />
+                </span>
                 Connected to session
               </div>
             </div>
@@ -224,8 +330,14 @@ export default function StudentSessionPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 bg-white p-3 text-center text-sm text-slate-500 sm:p-4">
-        <span className="font-medium text-slate-700">Biology</span> — Photosynthesis
+      <footer className="border-t border-indigo-100 bg-white/80 backdrop-blur-sm px-4 py-3">
+        <div className="mx-auto max-w-lg text-center">
+          <span className="text-sm">
+            <span className="font-semibold text-indigo-600">Physics</span>
+            <span className="mx-2 text-slate-300">|</span>
+            <span className="text-slate-500">Gravity & Motion</span>
+          </span>
+        </div>
       </footer>
     </div>
   )
