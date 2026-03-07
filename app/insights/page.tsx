@@ -6,10 +6,9 @@ import { Separator } from "@/components/ui/separator"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Progress } from "@/components/ui/progress"
-import { BarChart3, Calendar, Download, TrendingUp, TrendingDown, AlertTriangle, CheckCircle2, BookOpen } from "lucide-react"
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, LineChart, Line, Tooltip } from "recharts"
+import { BarChart3, Calendar, Download, TrendingUp, TrendingDown, AlertTriangle, BookOpen, Users, Zap } from "lucide-react"
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, LineChart, Line, Tooltip, Area, AreaChart } from "recharts"
 
 const weeklyData = [
   { day: "Mon", understanding: 65, participation: 80 },
@@ -38,138 +37,185 @@ export default function InsightsPage() {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b border-slate-200 px-4 bg-white">
+        <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center gap-2 border-b border-slate-200 bg-white/80 px-4 backdrop-blur-sm sm:h-16">
           <SidebarTrigger className="-ml-1" />
           <Separator orientation="vertical" className="mr-2 h-4" />
           <div className="flex flex-1 items-center justify-between">
             <div className="flex items-center gap-2">
-              <BarChart3 className="h-5 w-5 text-indigo-600" />
-              <h1 className="text-lg font-semibold text-slate-900">Insights</h1>
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-teal-500">
+                <BarChart3 className="h-4 w-4 text-white" />
+              </div>
+              <h1 className="text-base font-semibold text-slate-900 sm:text-lg">Insights</h1>
             </div>
             <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm">
-                <Calendar className="h-4 w-4 mr-2" />
+              <Button variant="outline" size="sm" className="hidden border-slate-200 sm:flex">
+                <Calendar className="mr-2 h-4 w-4" />
                 Last 7 days
               </Button>
-              <Button variant="outline" size="sm">
-                <Download className="h-4 w-4 mr-2" />
-                Export
+              <Button variant="outline" size="sm" className="border-slate-200">
+                <Download className="h-4 w-4 sm:mr-2" />
+                <span className="hidden sm:inline">Export</span>
               </Button>
             </div>
           </div>
         </header>
-        <main className="flex-1 overflow-auto bg-slate-50 p-6">
-          <div className="mx-auto max-w-6xl space-y-6">
+        <main className="flex-1 overflow-auto bg-slate-50 p-4 sm:p-6">
+          <div className="mx-auto max-w-6xl space-y-4 sm:space-y-6">
             {/* Summary Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <Card>
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+              <Card className="border-slate-200">
                 <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-start justify-between">
                     <div>
-                      <p className="text-sm text-slate-500">Avg. Understanding</p>
-                      <p className="text-2xl font-bold text-slate-900">72%</p>
+                      <p className="text-xs text-slate-500 sm:text-sm">Understanding</p>
+                      <p className="mt-1 text-xl font-bold text-slate-900 sm:text-2xl">72%</p>
                     </div>
-                    <div className="flex items-center text-green-600">
-                      <TrendingUp className="h-4 w-4 mr-1" />
-                      <span className="text-sm font-medium">+8%</span>
+                    <div className="flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700">
+                      <TrendingUp className="h-3 w-3" />
+                      +8%
                     </div>
                   </div>
                 </CardContent>
               </Card>
-              <Card>
+              <Card className="border-slate-200">
                 <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-start justify-between">
                     <div>
-                      <p className="text-sm text-slate-500">Participation Rate</p>
-                      <p className="text-2xl font-bold text-slate-900">85%</p>
+                      <p className="text-xs text-slate-500 sm:text-sm">Participation</p>
+                      <p className="mt-1 text-xl font-bold text-slate-900 sm:text-2xl">85%</p>
                     </div>
-                    <div className="flex items-center text-green-600">
-                      <TrendingUp className="h-4 w-4 mr-1" />
-                      <span className="text-sm font-medium">+5%</span>
+                    <div className="flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700">
+                      <TrendingUp className="h-3 w-3" />
+                      +5%
                     </div>
                   </div>
                 </CardContent>
               </Card>
-              <Card>
+              <Card className="border-slate-200">
                 <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-start justify-between">
                     <div>
-                      <p className="text-sm text-slate-500">Misconceptions Detected</p>
-                      <p className="text-2xl font-bold text-amber-600">16</p>
+                      <p className="text-xs text-slate-500 sm:text-sm">Misconceptions</p>
+                      <p className="mt-1 text-xl font-bold text-amber-600 sm:text-2xl">16</p>
                     </div>
-                    <div className="flex items-center text-red-600">
-                      <TrendingDown className="h-4 w-4 mr-1" />
-                      <span className="text-sm font-medium">-3</span>
+                    <div className="flex items-center gap-1 rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-700">
+                      <TrendingDown className="h-3 w-3" />
+                      -3
                     </div>
                   </div>
                 </CardContent>
               </Card>
-              <Card>
+              <Card className="border-slate-200">
                 <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-start justify-between">
                     <div>
-                      <p className="text-sm text-slate-500">Questions Asked</p>
-                      <p className="text-2xl font-bold text-slate-900">48</p>
+                      <p className="text-xs text-slate-500 sm:text-sm">Questions</p>
+                      <p className="mt-1 text-xl font-bold text-slate-900 sm:text-2xl">48</p>
                     </div>
-                    <div className="flex items-center text-slate-400">
-                      <span className="text-sm font-medium">This week</span>
-                    </div>
+                    <span className="text-xs text-slate-400">This week</span>
                   </div>
                 </CardContent>
               </Card>
             </div>
 
             {/* Charts */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-slate-900">Weekly Trends</CardTitle>
-                  <CardDescription>Understanding and participation over time</CardDescription>
+            <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-2">
+              <Card className="border-slate-200">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base text-slate-900 sm:text-lg">Weekly Trends</CardTitle>
+                  <CardDescription>Understanding and participation</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="h-64">
+                  <div className="h-56 sm:h-64">
                     <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={weeklyData}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                        <XAxis dataKey="day" stroke="#64748b" fontSize={12} />
-                        <YAxis stroke="#64748b" fontSize={12} />
-                        <Tooltip />
-                        <Line
+                      <AreaChart data={weeklyData}>
+                        <defs>
+                          <linearGradient id="colorUnderstanding" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3}/>
+                            <stop offset="95%" stopColor="#6366f1" stopOpacity={0}/>
+                          </linearGradient>
+                          <linearGradient id="colorParticipation" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
+                            <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
+                        <XAxis dataKey="day" stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} />
+                        <YAxis stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} />
+                        <Tooltip 
+                          contentStyle={{ 
+                            backgroundColor: 'white', 
+                            border: '1px solid #e2e8f0',
+                            borderRadius: '8px',
+                            boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)'
+                          }} 
+                        />
+                        <Area
                           type="monotone"
                           dataKey="understanding"
                           stroke="#6366f1"
                           strokeWidth={2}
-                          dot={{ fill: "#6366f1" }}
+                          fill="url(#colorUnderstanding)"
                           name="Understanding"
                         />
-                        <Line
+                        <Area
                           type="monotone"
                           dataKey="participation"
                           stroke="#10b981"
                           strokeWidth={2}
-                          dot={{ fill: "#10b981" }}
+                          fill="url(#colorParticipation)"
                           name="Participation"
                         />
-                      </LineChart>
+                      </AreaChart>
                     </ResponsiveContainer>
+                  </div>
+                  <div className="mt-3 flex items-center justify-center gap-6">
+                    <div className="flex items-center gap-2">
+                      <div className="h-3 w-3 rounded-full bg-indigo-500" />
+                      <span className="text-sm text-slate-600">Understanding</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="h-3 w-3 rounded-full bg-emerald-500" />
+                      <span className="text-sm text-slate-600">Participation</span>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-slate-900">Topic Performance</CardTitle>
-                  <CardDescription>Understanding by topic area</CardDescription>
+              <Card className="border-slate-200">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base text-slate-900 sm:text-lg">Topic Performance</CardTitle>
+                  <CardDescription>Understanding by topic</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="h-64">
+                  <div className="h-56 sm:h-64">
                     <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={topicPerformance} layout="vertical">
-                        <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                        <XAxis type="number" stroke="#64748b" fontSize={12} domain={[0, 100]} />
-                        <YAxis dataKey="topic" type="category" stroke="#64748b" fontSize={12} width={100} />
-                        <Tooltip />
-                        <Bar dataKey="understanding" fill="#6366f1" radius={[0, 4, 4, 0]} name="Understanding %" />
+                      <BarChart data={topicPerformance} layout="vertical" barSize={20}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" horizontal={false} />
+                        <XAxis type="number" stroke="#64748b" fontSize={12} domain={[0, 100]} tickLine={false} axisLine={false} />
+                        <YAxis 
+                          dataKey="topic" 
+                          type="category" 
+                          stroke="#64748b" 
+                          fontSize={11} 
+                          width={90} 
+                          tickLine={false} 
+                          axisLine={false}
+                        />
+                        <Tooltip 
+                          contentStyle={{ 
+                            backgroundColor: 'white', 
+                            border: '1px solid #e2e8f0',
+                            borderRadius: '8px',
+                            boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)'
+                          }} 
+                        />
+                        <Bar 
+                          dataKey="understanding" 
+                          fill="#1e3a5f" 
+                          radius={[0, 6, 6, 0]} 
+                          name="Understanding %" 
+                        />
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
@@ -177,24 +223,24 @@ export default function InsightsPage() {
               </Card>
             </div>
 
-            {/* Misconceptions Table */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-slate-900 flex items-center gap-2">
-                  <AlertTriangle className="h-5 w-5 text-amber-600" />
-                  Top Misconceptions This Week
+            {/* Misconceptions */}
+            <Card className="border-slate-200">
+              <CardHeader className="pb-3">
+                <CardTitle className="flex items-center gap-2 text-base text-slate-900 sm:text-lg">
+                  <AlertTriangle className="h-5 w-5 text-amber-500" />
+                  Top Misconceptions
                 </CardTitle>
-                <CardDescription>Common misunderstandings detected across your class</CardDescription>
+                <CardDescription>Common misunderstandings detected</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
                   {recentMisconceptions.map((item) => (
                     <div
                       key={item.id}
-                      className="flex items-center justify-between p-4 rounded-lg border border-slate-200 bg-white"
+                      className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-white p-4 transition-colors hover:bg-slate-50 sm:flex-row sm:items-center sm:justify-between"
                     >
-                      <div className="flex items-center gap-4">
-                        <div className={`flex h-10 w-10 items-center justify-center rounded-full ${
+                      <div className="flex items-start gap-3 sm:items-center">
+                        <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${
                           item.severity === "high" ? "bg-red-100" :
                           item.severity === "medium" ? "bg-amber-100" : "bg-yellow-100"
                         }`}>
@@ -203,29 +249,27 @@ export default function InsightsPage() {
                             item.severity === "medium" ? "text-amber-600" : "text-yellow-600"
                           }`} />
                         </div>
-                        <div>
+                        <div className="min-w-0">
                           <p className="font-medium text-slate-900">"{item.concept}"</p>
-                          <div className="flex items-center gap-2 mt-1">
-                            <Badge variant="outline" className="text-xs">
-                              <BookOpen className="h-3 w-3 mr-1" />
-                              {item.topic}
-                            </Badge>
-                          </div>
+                          <Badge variant="outline" className="mt-1 border-slate-200 text-xs">
+                            <BookOpen className="mr-1 h-3 w-3" />
+                            {item.topic}
+                          </Badge>
                         </div>
                       </div>
-                      <div className="flex items-center gap-4">
-                        <div className="text-right">
-                          <p className="text-lg font-semibold text-slate-900">{item.frequency}</p>
+                      <div className="flex items-center justify-between gap-4 sm:justify-end">
+                        <div className="text-left sm:text-right">
+                          <p className="text-xl font-bold text-slate-900">{item.frequency}</p>
                           <p className="text-xs text-slate-500">of students</p>
                         </div>
                         <Badge
                           variant="outline"
                           className={
                             item.severity === "high"
-                              ? "text-red-700 border-red-200 bg-red-50"
+                              ? "border-red-200 bg-red-50 text-red-700"
                               : item.severity === "medium"
-                              ? "text-amber-700 border-amber-200 bg-amber-50"
-                              : "text-yellow-700 border-yellow-200 bg-yellow-50"
+                              ? "border-amber-200 bg-amber-50 text-amber-700"
+                              : "border-yellow-200 bg-yellow-50 text-yellow-700"
                           }
                         >
                           {item.severity}
@@ -237,26 +281,26 @@ export default function InsightsPage() {
               </CardContent>
             </Card>
 
-            {/* Topic Details */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-slate-900">Topic Breakdown</CardTitle>
+            {/* Topic Breakdown */}
+            <Card className="border-slate-200">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base text-slate-900 sm:text-lg">Topic Breakdown</CardTitle>
                 <CardDescription>Detailed performance by topic</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {topicPerformance.map((topic) => (
                     <div key={topic.topic} className="space-y-2">
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between gap-4">
                         <span className="font-medium text-slate-900">{topic.topic}</span>
-                        <div className="flex items-center gap-3">
+                        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
                           {topic.misconceptions > 0 && (
-                            <Badge variant="outline" className="text-amber-700 border-amber-200 bg-amber-50">
-                              {topic.misconceptions} misconceptions
+                            <Badge variant="outline" className="border-amber-200 bg-amber-50 text-amber-700">
+                              {topic.misconceptions} issues
                             </Badge>
                           )}
-                          <span className={`text-sm font-medium ${
-                            topic.understanding >= 80 ? "text-green-600" :
+                          <span className={`text-sm font-semibold ${
+                            topic.understanding >= 80 ? "text-emerald-600" :
                             topic.understanding >= 60 ? "text-amber-600" : "text-red-600"
                           }`}>
                             {topic.understanding}%
