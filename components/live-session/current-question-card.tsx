@@ -1,16 +1,47 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { SkipForward, Eye, EyeOff, MessageSquarePlus, Check, Sparkles } from "lucide-react"
+import { SkipForward, Eye, EyeOff, MessageSquarePlus, Check, Sparkles, Zap } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 const initialOptions = [
-  { label: "A", answer: "Oxygen", votes: 3, isCorrect: false },
-  { label: "B", answer: "Glucose", votes: 12, isCorrect: true },
-  { label: "C", answer: "Carbon dioxide", votes: 2, isCorrect: false },
-  { label: "D", answer: "Water", votes: 2, isCorrect: false },
+  { label: "A", answer: "Oxygen", votes: 3, isCorrect: false, color: "sky" },
+  { label: "B", answer: "Glucose", votes: 12, isCorrect: true, color: "emerald" },
+  { label: "C", answer: "Carbon dioxide", votes: 2, isCorrect: false, color: "amber" },
+  { label: "D", answer: "Water", votes: 2, isCorrect: false, color: "violet" },
 ]
+
+const colorStyles = {
+  sky: {
+    bg: "bg-gradient-to-r from-sky-50 to-sky-100",
+    border: "border-sky-200",
+    badge: "bg-sky-500",
+    text: "text-sky-700",
+    bar: "bg-sky-400",
+  },
+  emerald: {
+    bg: "bg-gradient-to-r from-emerald-50 to-emerald-100",
+    border: "border-emerald-200",
+    badge: "bg-emerald-500",
+    text: "text-emerald-700",
+    bar: "bg-emerald-400",
+  },
+  amber: {
+    bg: "bg-gradient-to-r from-amber-50 to-amber-100",
+    border: "border-amber-200",
+    badge: "bg-amber-500",
+    text: "text-amber-700",
+    bar: "bg-amber-400",
+  },
+  violet: {
+    bg: "bg-gradient-to-r from-violet-50 to-violet-100",
+    border: "border-violet-200",
+    badge: "bg-violet-500",
+    text: "text-violet-700",
+    bar: "bg-violet-400",
+  },
+}
 
 export function CurrentQuestionCard() {
   const [showAnswer, setShowAnswer] = useState(false)
@@ -34,14 +65,14 @@ export function CurrentQuestionCard() {
             if (random < cumulative) {
               newOptions[i] = { ...newOptions[i], votes: newOptions[i].votes + 1 }
               setAnimatingOption(newOptions[i].label)
-              setTimeout(() => setAnimatingOption(null), 600)
+              setTimeout(() => setAnimatingOption(null), 800)
               break
             }
           }
           return newOptions
         })
       }
-    }, 2500)
+    }, 2000)
 
     return () => clearInterval(interval)
   }, [totalVotes])
@@ -52,110 +83,110 @@ export function CurrentQuestionCard() {
   }
 
   return (
-    <div className="bg-white border border-[#E5E7EB] rounded-xl shadow-sm overflow-hidden">
+    <div className="card-indigo rounded-2xl shadow-lg shadow-indigo-100 overflow-hidden">
       {/* Header */}
-      <div className="px-6 py-4 border-b border-[#E5E7EB]">
+      <div className="px-6 lg:px-8 py-5 border-b border-indigo-200/50 bg-white/50">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-base font-semibold text-[#111827]">Current Question</h2>
-            <p className="text-sm text-[#6B7280]">Question 3 of 5</p>
+            <h2 className="text-xl lg:text-2xl font-bold text-slate-900">Current Question</h2>
+            <p className="text-base text-indigo-600 font-medium mt-0.5">Question 3 of 5</p>
           </div>
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#DCFCE7] border border-[#bbf7d0]">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#22c55e] opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-[#22c55e]" />
+          <div className="flex items-center gap-2.5 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-100 to-emerald-200 border border-emerald-300">
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-75" />
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500" />
             </span>
-            <span className="text-sm font-medium text-[#166534]">Live Voting</span>
+            <span className="text-sm font-bold text-emerald-700 uppercase tracking-wide">Live Voting</span>
           </div>
         </div>
       </div>
 
       {/* Question */}
-      <div className="px-6 py-5">
-        <p className="text-lg font-medium text-[#111827] leading-relaxed">
+      <div className="px-6 lg:px-8 py-6 bg-white/30">
+        <p className="text-xl lg:text-2xl font-semibold text-slate-900 leading-relaxed">
           What is the main product of photosynthesis?
         </p>
       </div>
 
       {/* Answer Options */}
-      <div className="px-6 pb-4 space-y-3">
+      <div className="px-6 lg:px-8 pb-6 space-y-4">
         {options.map((option) => {
           const percentage = getPercentage(option.votes)
           const isAnimating = animatingOption === option.label
           const isCorrect = showAnswer && option.isCorrect
           const isWrong = showAnswer && !option.isCorrect
+          const colors = colorStyles[option.color as keyof typeof colorStyles]
           
           return (
             <div
               key={option.label}
               className={cn(
-                "relative overflow-hidden rounded-xl border transition-all duration-300",
+                "relative overflow-hidden rounded-2xl border-2 transition-all duration-500",
                 isCorrect
-                  ? "border-[#22c55e] bg-[#DCFCE7]"
+                  ? "border-emerald-400 bg-gradient-to-r from-emerald-100 to-emerald-200 shadow-lg shadow-emerald-100 scale-[1.02]"
                   : isWrong
-                  ? "border-[#E5E7EB] bg-[#F8FAFC] opacity-60"
+                  ? "border-slate-200 bg-slate-50 opacity-50"
                   : isAnimating
-                  ? "border-[#2563EB] bg-[#dbeafe]"
-                  : "border-[#E5E7EB] bg-white hover:border-[#d1d5db] hover:bg-[#F8FAFC]"
+                  ? `${colors.border} ${colors.bg} shadow-lg scale-[1.01]`
+                  : "border-white/50 bg-white/60 hover:bg-white/80 hover:border-indigo-200 hover:shadow-md"
               )}
             >
               {/* Progress Bar Background */}
               <div
                 className={cn(
-                  "absolute inset-y-0 left-0 transition-all duration-700 ease-out",
-                  isCorrect 
-                    ? "bg-[#bbf7d0]/50" 
-                    : isAnimating
-                    ? "bg-[#93c5fd]/30"
-                    : "bg-[#F8FAFC]"
+                  "absolute inset-y-0 left-0 transition-all duration-700 ease-out opacity-30",
+                  isCorrect ? "bg-emerald-400" : colors.bar
                 )}
                 style={{ width: `${percentage}%` }}
               />
               
               {/* Content */}
-              <div className="relative flex items-center gap-4 p-4">
+              <div className="relative flex items-center gap-4 lg:gap-5 p-4 lg:p-5">
                 <div
                   className={cn(
-                    "flex h-10 w-10 items-center justify-center rounded-lg text-sm font-semibold transition-all duration-300",
+                    "flex h-12 w-12 lg:h-14 lg:w-14 items-center justify-center rounded-xl text-lg font-bold transition-all duration-300",
                     isCorrect
-                      ? "bg-[#22c55e] text-white"
+                      ? "bg-emerald-500 text-white shadow-lg shadow-emerald-200"
                       : isAnimating
-                      ? "bg-[#2563EB] text-white scale-105"
-                      : "bg-[#F8FAFC] text-[#6B7280] border border-[#E5E7EB]"
+                      ? `${colors.badge} text-white scale-110 shadow-lg`
+                      : "bg-white text-slate-600 border-2 border-slate-200"
                   )}
                 >
                   {isCorrect ? (
-                    <Check className="h-5 w-5" />
+                    <Check className="h-6 w-6" />
                   ) : (
                     option.label
                   )}
                 </div>
                 
                 <span className={cn(
-                  "flex-1 text-sm font-medium transition-colors duration-300",
-                  isCorrect ? "text-[#166534]" : "text-[#111827]"
+                  "flex-1 text-lg lg:text-xl font-semibold transition-colors duration-300",
+                  isCorrect ? "text-emerald-800" : "text-slate-800"
                 )}>
                   {option.answer}
                 </span>
                 
                 <div className="flex items-center gap-3">
                   {isAnimating && (
-                    <Sparkles className="h-4 w-4 text-[#2563EB] animate-pulse" />
+                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/80 border border-indigo-200">
+                      <Zap className="h-4 w-4 text-amber-500" />
+                      <span className="text-sm font-bold text-indigo-600">+1</span>
+                    </div>
                   )}
-                  <div className="text-right min-w-[48px]">
+                  <div className="text-right min-w-[60px]">
                     <div className={cn(
-                      "text-lg font-semibold tabular-nums transition-all duration-300",
+                      "text-2xl lg:text-3xl font-bold tabular-nums transition-all duration-300",
                       isCorrect 
-                        ? "text-[#166534]" 
+                        ? "text-emerald-600" 
                         : isAnimating
-                        ? "text-[#2563EB]"
-                        : "text-[#111827]"
+                        ? colors.text
+                        : "text-slate-800"
                     )}>
                       {option.votes}
                     </div>
                     <div className={cn(
-                      "text-xs font-medium transition-colors duration-300",
-                      isCorrect ? "text-[#166534]" : "text-[#6B7280]"
+                      "text-sm font-semibold transition-colors duration-300",
+                      isCorrect ? "text-emerald-600" : "text-slate-500"
                     )}>
                       {percentage}%
                     </div>
@@ -168,50 +199,56 @@ export function CurrentQuestionCard() {
       </div>
 
       {/* Response Progress */}
-      <div className="px-6 py-4 border-t border-[#E5E7EB] bg-[#F8FAFC]">
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-baseline gap-1">
-            <span className="text-2xl font-semibold text-[#2563EB] tabular-nums">{totalVotes}</span>
-            <span className="text-sm text-[#6B7280]">/ {totalStudents} responses</span>
+      <div className="px-6 lg:px-8 py-5 border-t border-indigo-200/50 bg-white/50">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-baseline gap-2">
+            <span className="text-metric text-indigo-600 tabular-nums">{totalVotes}</span>
+            <span className="text-lg text-slate-500">/ {totalStudents} responses</span>
           </div>
-          <span className="text-sm font-medium text-[#6B7280] tabular-nums">
-            {Math.round((totalVotes / totalStudents) * 100)}% complete
-          </span>
+          <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-100 border border-indigo-200">
+            <Sparkles className="h-4 w-4 text-indigo-600" />
+            <span className="text-base font-bold text-indigo-700 tabular-nums">
+              {Math.round((totalVotes / totalStudents) * 100)}%
+            </span>
+          </div>
         </div>
-        <div className="h-2 w-full overflow-hidden rounded-full bg-[#E5E7EB]">
+        <div className="h-3 w-full overflow-hidden rounded-full bg-indigo-100">
           <div 
-            className="h-full bg-[#2563EB] rounded-full transition-all duration-500 ease-out"
+            className="h-full bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full transition-all duration-500 ease-out"
             style={{ width: `${(totalVotes / totalStudents) * 100}%` }}
           />
         </div>
       </div>
 
       {/* Control Buttons */}
-      <div className="px-6 py-4 border-t border-[#E5E7EB] flex flex-wrap gap-3">
+      <div className="px-6 lg:px-8 py-5 border-t border-indigo-200/50 bg-white/30 flex flex-wrap gap-3">
         <Button 
-          className="flex-1 gap-2 bg-[#2563EB] hover:bg-[#1d4ed8] text-white transition-all duration-200 hover:shadow-md active:scale-[0.98]"
+          size="lg"
+          className="flex-1 gap-2.5 btn-premium text-white text-base font-semibold rounded-xl h-12"
         >
-          <SkipForward className="h-4 w-4" />
+          <SkipForward className="h-5 w-5" />
           Next Question
         </Button>
         <Button 
+          size="lg"
           variant="outline" 
           className={cn(
-            "flex-1 gap-2 transition-all duration-200 active:scale-[0.98]",
+            "flex-1 gap-2.5 text-base font-semibold rounded-xl h-12 transition-all duration-300",
             showAnswer 
-              ? "border-[#22c55e] bg-[#DCFCE7] text-[#166534] hover:bg-[#bbf7d0]" 
-              : "border-[#E5E7EB] text-[#6B7280] hover:text-[#111827] hover:bg-[#F8FAFC]"
+              ? "border-2 border-emerald-400 bg-emerald-100 text-emerald-700 hover:bg-emerald-200" 
+              : "border-2 border-indigo-200 bg-white text-slate-600 hover:text-indigo-700 hover:bg-indigo-50 hover:border-indigo-300"
           )}
           onClick={() => setShowAnswer(!showAnswer)}
         >
-          {showAnswer ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+          {showAnswer ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
           {showAnswer ? "Hide Answer" : "Reveal Answer"}
         </Button>
         <Button 
+          size="lg"
           variant="outline" 
-          className="flex-1 gap-2 border-[#E5E7EB] text-[#6B7280] hover:text-[#111827] hover:bg-[#F8FAFC] transition-all duration-200 active:scale-[0.98]"
+          className="flex-1 gap-2.5 border-2 border-indigo-200 bg-white text-slate-600 hover:text-indigo-700 hover:bg-indigo-50 hover:border-indigo-300 text-base font-semibold rounded-xl h-12 transition-all duration-300"
         >
-          <MessageSquarePlus className="h-4 w-4" />
+          <MessageSquarePlus className="h-5 w-5" />
           Ask Follow-Up
         </Button>
       </div>
