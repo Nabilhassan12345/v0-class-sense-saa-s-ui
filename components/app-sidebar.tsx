@@ -11,7 +11,8 @@ import {
   Settings,
   GraduationCap,
   ChevronRight,
-  Zap,
+  UserCircle,
+  Smartphone,
 } from "lucide-react"
 
 import {
@@ -62,6 +63,15 @@ const mainNavItems = [
   },
 ]
 
+const studentExperienceItems = [
+  {
+    title: "Student View",
+    icon: Smartphone,
+    href: "/student-view",
+    gradient: "from-pink-500 to-rose-500",
+  },
+]
+
 const settingsNavItems = [
   {
     title: "Settings",
@@ -88,9 +98,10 @@ export function AppSidebar() {
         </Link>
       </SidebarHeader>
       <SidebarContent className="px-3 py-5">
+        {/* Main Navigation */}
         <SidebarGroup>
           <SidebarGroupLabel className="mb-3 px-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-            Navigation
+            Teacher Tools
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1.5">
@@ -127,6 +138,49 @@ export function AppSidebar() {
                             <span className="relative inline-flex h-3 w-3 rounded-full bg-green-500 shadow-lg shadow-green-500/50" />
                           </span>
                         )}
+                        {isActive && (
+                          <ChevronRight className="h-5 w-5 text-white/70" />
+                        )}
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Student Experience Section */}
+        <SidebarGroup className="mt-6">
+          <SidebarGroupLabel className="mb-3 px-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+            Student Experience
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu className="space-y-1.5">
+              {studentExperienceItems.map((item) => {
+                const isActive = pathname === item.href
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={isActive}
+                      className={cn(
+                        "group relative flex items-center gap-3 rounded-xl px-3 py-3 font-semibold transition-all duration-200",
+                        isActive
+                          ? `bg-gradient-to-r ${item.gradient} text-white shadow-lg`
+                          : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                      )}
+                    >
+                      <Link href={item.href}>
+                        <div className={cn(
+                          "flex h-9 w-9 items-center justify-center rounded-lg transition-all",
+                          isActive 
+                            ? "bg-white/20" 
+                            : `bg-gradient-to-br ${item.gradient} shadow-md`
+                        )}>
+                          <item.icon className="h-5 w-5 text-white" />
+                        </div>
+                        <span className="flex-1 text-base">{item.title}</span>
                         {isActive && (
                           <ChevronRight className="h-5 w-5 text-white/70" />
                         )}
