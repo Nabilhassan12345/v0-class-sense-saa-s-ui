@@ -4,26 +4,27 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* ClassSense Design System */
-  --cs-primary: #1e3a5f;
-  --cs-primary-hover: #16324d;
-  --cs-primary-light: #e8f0f8;
+  /* ClassSense Design System - Modern SaaS Palette */
+  --cs-primary: #2563EB;
+  --cs-primary-hover: #1d4ed8;
+  --cs-primary-light: #dbeafe;
   
-  --cs-success: #22c55e;
-  --cs-success-light: #dcfce7;
-  --cs-success-text: #166534;
+  /* Status Colors - Soft Tones */
+  --cs-success: #166534;
+  --cs-success-bg: #DCFCE7;
   
-  --cs-warning: #f59e0b;
-  --cs-warning-light: #fef3c7;
-  --cs-warning-text: #92400e;
+  --cs-warning: #92400E;
+  --cs-warning-bg: #FEF3C7;
   
-  --cs-error: #ef4444;
-  --cs-error-light: #fee2e2;
-  --cs-error-text: #991b1b;
+  --cs-error: #991B1B;
+  --cs-error-bg: #FEE2E2;
   
-  --cs-bg: #f8fafc;
-  --cs-card: #ffffff;
-  --cs-border: #e2e8f0;
+  /* Neutral Palette */
+  --cs-bg: #F8FAFC;
+  --cs-card: #FFFFFF;
+  --cs-border: #E5E7EB;
+  --cs-text: #111827;
+  --cs-text-secondary: #6B7280;
   
   /* Base System */
   --background: oklch(0.985 0.002 247);
@@ -32,7 +33,7 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.28 0.08 250);
+  --primary: oklch(0.55 0.22 264);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
@@ -44,8 +45,8 @@
   --destructive-foreground: oklch(0.577 0.245 27.325);
   --border: oklch(0.90 0 0);
   --input: oklch(0.90 0 0);
-  --ring: oklch(0.28 0.08 250);
-  --chart-1: oklch(0.28 0.08 250);
+  --ring: oklch(0.55 0.22 264);
+  --chart-1: oklch(0.55 0.22 264);
   --chart-2: oklch(0.6 0.2 145);
   --chart-3: oklch(0.7 0.2 85);
   --chart-4: oklch(0.6 0.2 30);
@@ -53,12 +54,12 @@
   --radius: 0.75rem;
   --sidebar: oklch(1 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.28 0.08 250);
+  --sidebar-primary: oklch(0.55 0.22 264);
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.95 0.01 250);
-  --sidebar-accent-foreground: oklch(0.28 0.08 250);
+  --sidebar-accent: oklch(0.95 0.01 264);
+  --sidebar-accent-foreground: oklch(0.55 0.22 264);
   --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.28 0.08 250);
+  --sidebar-ring: oklch(0.55 0.22 264);
 }
 
 .dark {
@@ -68,7 +69,7 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.18 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.6 0.15 250);
+  --primary: oklch(0.6 0.15 264);
   --primary-foreground: oklch(0.145 0 0);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
@@ -80,25 +81,25 @@
   --destructive-foreground: oklch(0.637 0.237 25.331);
   --border: oklch(0.3 0 0);
   --input: oklch(0.3 0 0);
-  --ring: oklch(0.6 0.15 250);
-  --chart-1: oklch(0.6 0.15 250);
+  --ring: oklch(0.6 0.15 264);
+  --chart-1: oklch(0.6 0.15 264);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
   --sidebar: oklch(0.18 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.6 0.15 250);
+  --sidebar-primary: oklch(0.6 0.15 264);
   --sidebar-primary-foreground: oklch(0.145 0 0);
   --sidebar-accent: oklch(0.269 0 0);
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(0.3 0 0);
-  --sidebar-ring: oklch(0.6 0.15 250);
+  --sidebar-ring: oklch(0.6 0.15 264);
 }
 
 @theme inline {
-  --font-sans: 'Geist', 'Geist Fallback', system-ui, sans-serif;
-  --font-mono: 'Geist Mono', 'Geist Mono Fallback', monospace;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-mono: var(--font-mono), 'Geist Mono', monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -147,66 +148,90 @@
 }
 
 @layer utilities {
-  /* Card hover effect */
-  .card-interactive {
-    @apply transition-all duration-200 ease-out;
-  }
-  .card-interactive:hover {
-    @apply shadow-md border-slate-300;
-    transform: translateY(-1px);
+  /* Card styles */
+  .card-elevated {
+    @apply bg-white border border-[#E5E7EB] rounded-xl shadow-sm;
   }
   
-  /* Pulse animation for live indicators */
-  @keyframes pulse-ring {
-    0% {
-      transform: scale(0.8);
+  .card-elevated:hover {
+    @apply shadow-md;
+  }
+  
+  /* Interactive card */
+  .card-interactive {
+    @apply transition-all duration-200 ease-out cursor-pointer;
+  }
+  
+  .card-interactive:hover {
+    @apply shadow-md -translate-y-0.5;
+  }
+  
+  /* Badge variants - soft tones */
+  .badge-success {
+    @apply bg-[#DCFCE7] text-[#166534] border border-[#bbf7d0];
+  }
+  
+  .badge-warning {
+    @apply bg-[#FEF3C7] text-[#92400E] border border-[#fde68a];
+  }
+  
+  .badge-error {
+    @apply bg-[#FEE2E2] text-[#991B1B] border border-[#fecaca];
+  }
+  
+  .badge-primary {
+    @apply bg-[#dbeafe] text-[#1e40af] border border-[#93c5fd];
+  }
+  
+  /* Status indicators */
+  .status-dot {
+    @apply h-2 w-2 rounded-full;
+  }
+  
+  .status-dot-success {
+    @apply bg-[#22c55e];
+  }
+  
+  .status-dot-warning {
+    @apply bg-[#f59e0b];
+  }
+  
+  .status-dot-error {
+    @apply bg-[#ef4444];
+  }
+  
+  /* Animated pulse for live indicators */
+  @keyframes pulse-soft {
+    0%, 100% {
       opacity: 1;
     }
-    100% {
-      transform: scale(2);
-      opacity: 0;
+    50% {
+      opacity: 0.5;
     }
   }
   
-  .pulse-live {
-    position: relative;
-  }
-  .pulse-live::before {
-    content: '';
-    position: absolute;
-    inset: -2px;
-    border-radius: 50%;
-    background: #22c55e;
-    animation: pulse-ring 1.5s ease-out infinite;
+  .pulse-soft {
+    animation: pulse-soft 2s ease-in-out infinite;
   }
   
-  /* Smooth transitions for all interactive elements */
-  .interactive {
-    @apply transition-all duration-150 ease-out;
+  /* Progress bar animation */
+  @keyframes progress-fill {
+    from {
+      width: 0%;
+    }
   }
   
-  /* Status indicator colors */
-  .status-success {
-    @apply bg-green-500;
-  }
-  .status-warning {
-    @apply bg-amber-500;
-  }
-  .status-error {
-    @apply bg-red-500;
+  .progress-animated {
+    animation: progress-fill 1s ease-out forwards;
   }
   
-  /* Badge variants */
-  .badge-success {
-    @apply bg-green-100 text-green-700 border-green-200;
+  /* Smooth transitions */
+  .transition-smooth {
+    @apply transition-all duration-200 ease-out;
   }
-  .badge-warning {
-    @apply bg-amber-100 text-amber-700 border-amber-200;
-  }
-  .badge-error {
-    @apply bg-red-100 text-red-700 border-red-200;
-  }
-  .badge-primary {
-    @apply bg-blue-100 text-[#1e3a5f] border-blue-200;
+  
+  /* Focus visible styles */
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:ring-offset-2;
   }
 }
