@@ -1,5 +1,7 @@
 "use client"
 
+import { usePathname } from "next/navigation"
+import Link from "next/link"
 import {
   LayoutDashboard,
   Radio,
@@ -27,32 +29,27 @@ const mainNavItems = [
   {
     title: "Dashboard",
     icon: LayoutDashboard,
-    href: "#",
-    isActive: false,
+    href: "/",
   },
   {
     title: "Live Session",
     icon: Radio,
-    href: "#",
-    isActive: true,
+    href: "/live-session",
   },
   {
     title: "AI Question Generator",
     icon: Sparkles,
-    href: "#",
-    isActive: false,
+    href: "/ai-questions",
   },
   {
     title: "Students",
     icon: Users,
-    href: "#",
-    isActive: false,
+    href: "/students",
   },
   {
     title: "Insights",
     icon: BarChart3,
-    href: "#",
-    isActive: false,
+    href: "/insights",
   },
 ]
 
@@ -60,12 +57,13 @@ const settingsNavItems = [
   {
     title: "Settings",
     icon: Settings,
-    href: "#",
-    isActive: false,
+    href: "/settings",
   },
 ]
 
 export function AppSidebar() {
+  const pathname = usePathname()
+
   return (
     <Sidebar className="border-r border-slate-200">
       <SidebarHeader className="border-b border-slate-200 px-4 py-4">
@@ -83,46 +81,57 @@ export function AppSidebar() {
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {mainNavItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={item.isActive}
-                    className={
-                      item.isActive
-                        ? "bg-indigo-50 text-indigo-700 hover:bg-indigo-100"
-                        : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                    }
-                  >
-                    <a href={item.href}>
-                      <item.icon className="h-4 w-4" />
-                      <span>{item.title}</span>
-                      {item.title === "Live Session" && (
-                        <span className="ml-auto flex h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-                      )}
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {mainNavItems.map((item) => {
+                const isActive = pathname === item.href
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={isActive}
+                      className={
+                        isActive
+                          ? "bg-indigo-50 text-indigo-700 hover:bg-indigo-100"
+                          : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                      }
+                    >
+                      <Link href={item.href}>
+                        <item.icon className="h-4 w-4" />
+                        <span>{item.title}</span>
+                        {item.title === "Live Session" && (
+                          <span className="ml-auto flex h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+                        )}
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter className="border-t border-slate-200 px-2 py-4">
         <SidebarMenu>
-          {settingsNavItems.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton
-                asChild
-                className="text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-              >
-                <a href={item.href}>
-                  <item.icon className="h-4 w-4" />
-                  <span>{item.title}</span>
-                </a>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
+          {settingsNavItems.map((item) => {
+            const isActive = pathname === item.href
+            return (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton
+                  asChild
+                  isActive={isActive}
+                  className={
+                    isActive
+                      ? "bg-indigo-50 text-indigo-700 hover:bg-indigo-100"
+                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                  }
+                >
+                  <Link href={item.href}>
+                    <item.icon className="h-4 w-4" />
+                    <span>{item.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            )
+          })}
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
