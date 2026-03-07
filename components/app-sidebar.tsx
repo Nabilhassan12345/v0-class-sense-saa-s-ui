@@ -68,7 +68,7 @@ export function AppSidebar() {
     <Sidebar className="border-r border-slate-200">
       <SidebarHeader className="border-b border-slate-200 px-4 py-4">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#1e3a5f]">
             <GraduationCap className="h-5 w-5 text-white" />
           </div>
           <span className="text-lg font-semibold text-slate-900">ClassSense</span>
@@ -90,7 +90,7 @@ export function AppSidebar() {
                       isActive={isActive}
                       className={
                         isActive
-                          ? "bg-indigo-50 text-indigo-700 hover:bg-indigo-100"
+                          ? "bg-blue-50 text-[#1e3a5f] hover:bg-blue-100"
                           : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                       }
                     >
@@ -120,7 +120,7 @@ export function AppSidebar() {
                   isActive={isActive}
                   className={
                     isActive
-                      ? "bg-indigo-50 text-indigo-700 hover:bg-indigo-100"
+                      ? "bg-blue-50 text-[#1e3a5f] hover:bg-blue-100"
                       : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                   }
                 >
