@@ -9,6 +9,7 @@ import { MisconceptionAlert } from "@/components/misconception-alert"
 import { CurrentQuestion } from "@/components/current-question"
 import { ParticipationCard } from "@/components/participation-card"
 import { ConceptInsights } from "@/components/concept-insights"
+import { ReasoningInsights } from "@/components/reasoning-insights"
 
 export default function LiveSessionPage() {
   return (
@@ -84,6 +85,7 @@ export default function LiveSessionPage() {
               {/* LEFT COLUMN - Teacher Interaction */}
               <div className="space-y-6">
                 <CurrentQuestion />
+                <ReasoningInsights />
               </div>
 
               {/* RIGHT COLUMN - Classroom Insights */}
