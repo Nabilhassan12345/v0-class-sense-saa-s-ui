@@ -33,27 +33,52 @@ const mainNavItems = [
     title: "Dashboard",
     icon: LayoutDashboard,
     href: "/",
+    gradient: "from-indigo-500 to-purple-600",
+    iconBg: "bg-gradient-to-br from-indigo-500 to-purple-600",
+    activeBg: "bg-indigo-50",
+    activeText: "text-indigo-700",
+    activeBorder: "border-indigo-200",
   },
   {
     title: "Live Session",
     icon: Radio,
     href: "/live-session",
     isLive: true,
+    gradient: "from-emerald-500 to-teal-600",
+    iconBg: "bg-gradient-to-br from-emerald-500 to-teal-600",
+    activeBg: "bg-emerald-50",
+    activeText: "text-emerald-700",
+    activeBorder: "border-emerald-200",
   },
   {
     title: "AI Questions",
     icon: Sparkles,
     href: "/ai-questions",
+    gradient: "from-violet-500 to-purple-600",
+    iconBg: "bg-gradient-to-br from-violet-500 to-purple-600",
+    activeBg: "bg-violet-50",
+    activeText: "text-violet-700",
+    activeBorder: "border-violet-200",
   },
   {
     title: "Students",
     icon: Users,
     href: "/students",
+    gradient: "from-sky-500 to-blue-600",
+    iconBg: "bg-gradient-to-br from-sky-500 to-blue-600",
+    activeBg: "bg-sky-50",
+    activeText: "text-sky-700",
+    activeBorder: "border-sky-200",
   },
   {
     title: "Insights",
     icon: BarChart3,
     href: "/insights",
+    gradient: "from-amber-500 to-orange-600",
+    iconBg: "bg-gradient-to-br from-amber-500 to-orange-600",
+    activeBg: "bg-amber-50",
+    activeText: "text-amber-700",
+    activeBorder: "border-amber-200",
   },
 ]
 
@@ -62,6 +87,11 @@ const studentExperienceItems = [
     title: "Student View",
     icon: Smartphone,
     href: "/student-view",
+    gradient: "from-pink-500 to-rose-600",
+    iconBg: "bg-gradient-to-br from-pink-500 to-rose-600",
+    activeBg: "bg-pink-50",
+    activeText: "text-pink-700",
+    activeBorder: "border-pink-200",
   },
 ]
 
@@ -70,6 +100,11 @@ const settingsNavItems = [
     title: "Settings",
     icon: Settings,
     href: "/settings",
+    gradient: "from-slate-500 to-gray-600",
+    iconBg: "bg-gradient-to-br from-slate-500 to-gray-600",
+    activeBg: "bg-slate-100",
+    activeText: "text-slate-700",
+    activeBorder: "border-slate-200",
   },
 ]
 
@@ -82,17 +117,24 @@ export function AppSidebar() {
         asChild
         isActive={isActive}
         className={cn(
-          "group relative flex items-center gap-3 rounded-lg px-3 py-2.5 font-medium transition-all duration-200",
+          "group relative flex items-center gap-3 rounded-xl px-3 py-2.5 font-medium transition-all duration-200",
           isActive
-            ? "bg-slate-800 text-white shadow-md"
-            : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+            ? `${item.activeBg} ${item.activeText} border ${item.activeBorder} shadow-sm`
+            : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
         )}
       >
         <Link href={item.href}>
-          <item.icon className={cn(
-            "h-5 w-5 transition-colors",
-            isActive ? "text-white" : "text-slate-500"
-          )} />
+          <div className={cn(
+            "flex h-8 w-8 items-center justify-center rounded-lg transition-all",
+            isActive 
+              ? item.iconBg + " shadow-md"
+              : "bg-slate-100 group-hover:" + item.iconBg
+          )}>
+            <item.icon className={cn(
+              "h-4 w-4 transition-colors",
+              isActive ? "text-white" : "text-slate-500 group-hover:text-white"
+            )} />
+          </div>
           <span className="flex-1">{item.title}</span>
           {item.isLive && (
             <span className="relative flex h-2.5 w-2.5 mr-1">
@@ -101,7 +143,7 @@ export function AppSidebar() {
             </span>
           )}
           {isActive && (
-            <ChevronRight className="h-4 w-4 text-white/70" />
+            <ChevronRight className="h-4 w-4 opacity-50" />
           )}
         </Link>
       </SidebarMenuButton>
@@ -112,12 +154,12 @@ export function AppSidebar() {
     <Sidebar className="border-r border-slate-200 bg-white">
       <SidebarHeader className="border-b border-slate-100 px-4 py-4">
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg shadow-indigo-500/25 transition-transform group-hover:scale-105">
-            <GraduationCap className="h-5 w-5 text-white" />
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg shadow-indigo-500/25 transition-transform group-hover:scale-105">
+            <GraduationCap className="h-6 w-6 text-white" />
           </div>
           <div>
-            <span className="text-lg font-bold text-slate-900">ClassSense</span>
-            <p className="text-[10px] font-medium text-slate-400 uppercase tracking-wider">Classroom Intelligence</p>
+            <span className="text-xl font-bold text-slate-900">ClassSense</span>
+            <p className="text-[10px] font-medium text-indigo-500 uppercase tracking-wider">Classroom Intelligence</p>
           </div>
         </Link>
       </SidebarHeader>
