@@ -1,4 +1,8 @@
-# v0-class-sense-saa-s-ui
+# ClassSense: real-time classroom intelligence
+
+Teacher dashboard for live classes: live voting with misconception alerts, AI-generated questions, weekly insights and a student join view. Built with Next.js, Tailwind and shadcn/ui.
+
+<p align="center"><img src="docs/screenshots/tour.gif" width="800" alt="Dashboard, live session, insights, AI question generator and student view"></p>
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [v0](https://v0.app).
 
